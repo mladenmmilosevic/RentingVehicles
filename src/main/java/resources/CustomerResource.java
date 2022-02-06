@@ -65,28 +65,28 @@ public class CustomerResource {
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getAllCustomers")
    public Response getAllCustomer() {
       return Response.ok(service.getAllCustomers()).build(); //
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getVipCustomers")
    public Response getVipCustomer() {
       return Response.ok(service.getVipCustomers()).build();
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("name/{name}")
    public Response getCustomerByName(@PathParam("name") String name) {
       return Response.ok(service.getCustomersByName(name)).build(); //
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getCustomerByUIN/{uin}")
    public Response getCustomerByUIN(@PathParam("uin") String uin) {
       Customer customer = (Customer)service.get(Customer.class,uin);
@@ -98,7 +98,7 @@ public class CustomerResource {
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("cust/{uin}/ren/{id}")
    public Response delRezbyCustomer(@PathParam("uin") String uin, @PathParam("id") int id) {
       service.delRezbyCustomer(uin, id);
@@ -106,7 +106,6 @@ public class CustomerResource {
    }
 
    @POST
-   //@RolesAllowed({"customer","vip","admin"})
    @PermitAll
    public Response createCustomer(Customer customer) {
       Customer cust=(Customer)service.get(Customer.class,customer.getUin());
@@ -114,13 +113,13 @@ public class CustomerResource {
          throw new BadRequestException("Customer with an uin already exists");
       }
       customer.setPassword(passwordHash(customer.getPassword()));
-      customer.setRole(Role.customer);
+      customer.setRole(Role.CUSTOMER);
       service.create(customer);
       return Response.status(Response.Status.CREATED).build();
    }
 
    @PUT
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("{uin}")
    public Response updateCustomer(@PathParam("uin") String uin, Customer customer) {
       Customer cust=(Customer)service.get(Customer.class,uin);
@@ -151,7 +150,7 @@ public class CustomerResource {
    }
 
    @DELETE
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    @Path("{uin}")
    public Response deleteCustomer(@PathParam("uin") String uin) {
       Customer customer =(Customer) service.get(Customer.class,uin);
@@ -172,7 +171,6 @@ public class CustomerResource {
       {
          throw new NotFoundException("Customer with username "+credentials.getUsername()+" not found" );
       }
-
       boolean ver = pwdHash.verify(credentials.getPassword().toCharArray(),customer.getPassword());
       if(!ver) // !customer.getPassword().equals(pass)
       {
@@ -198,7 +196,7 @@ public class CustomerResource {
    }
 
    @Path("{uin}/changepass")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @POST
    public Response changePassCustomer(@PathParam("uin") String uin,ChangePassword cp) {
       Customer customer =(Customer) service.get(Customer.class,uin);
@@ -219,7 +217,7 @@ public class CustomerResource {
       return Response.ok().build();
    }
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("/logout")
    public Response logout(@Context HttpHeaders headers) {
       SecurityUtils.removeUserSecurity(request.getSession(), getId(headers));

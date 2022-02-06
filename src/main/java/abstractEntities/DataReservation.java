@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @MappedSuperclass
 public abstract class DataReservation  {
 
-
    @Transient
    protected String dateStartStr;
    @Transient
@@ -42,16 +41,12 @@ public abstract class DataReservation  {
       this.priceDay = priceDay;
    }
 
-
-
    public DataReservation(String dateStartStr, String dateEndStr, Integer priceDay) {
       super();
       this.dateStartStr = dateStartStr;
       this.dateEndStr = dateEndStr;
       this.priceDay = priceDay;
    }
-
-
 
    public String getDateStartStr() {
       return dateStartStr;
@@ -67,9 +62,7 @@ public abstract class DataReservation  {
    }
 
    public void setDateEndStr(String dateEndStr) throws ParseException {
-      System.out.println("Datum end ="+ dateEndStr);
       this.dateEndStr = dateEndStr;
-
       setDateEnd(new SimpleDateFormat("dd.MM.yyyy").parse(dateEndStr));
    }
 

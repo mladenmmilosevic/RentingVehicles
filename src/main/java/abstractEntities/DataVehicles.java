@@ -38,8 +38,6 @@ public abstract class DataVehicles {
       this.model = model;
    }
 
-
-
    public DataVehicles( String make,String model, String modelYear,
             Integer cubicCapacity,Integer enginePower) {
       super();
@@ -89,7 +87,6 @@ public abstract class DataVehicles {
    public void setEnginePower(Integer enginePower) {
       this.enginePower = enginePower;
    }
-
 
    @Override
    public String toString() {

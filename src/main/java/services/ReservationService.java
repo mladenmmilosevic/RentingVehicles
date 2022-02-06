@@ -6,7 +6,6 @@ import javax.ejb.Stateless;
 
 import entities.Reservation;
 
-
 @Stateless
 public class ReservationService extends BaseService{
 

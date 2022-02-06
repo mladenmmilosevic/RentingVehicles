@@ -29,7 +29,7 @@ public class CompanyResource {
 
    @GET
    @Path("getAllCarsByCompany/{tin}")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response getAllCarsByCompany(@PathParam("tin") String tin) {
 
       Company company = (Company)service.get(Company.class,tin);
@@ -43,14 +43,14 @@ public class CompanyResource {
 
    @GET
    @Path("getAllCompanies")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response getAllCompanies() {
       return Response.ok(service.getAllCompanies()).build(); //
    }
 
    @GET
    @Path("getCompanyByTin/{tin}")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response getCompanyByTin(@PathParam("tin") String tin) {
       Company company = (Company) service.get(Company.class,tin);
       if (company != null) {
@@ -62,7 +62,7 @@ public class CompanyResource {
    }
 
    @POST
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response createCompany(Company company) {
       Company comp=(Company) service.get(Company.class,company.getTin());
       if ( comp != null) {
@@ -74,7 +74,7 @@ public class CompanyResource {
 
    @PUT
    @Path("{tin}")
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response updateCompany(@PathParam("tin") String tin, Company company) {
       Company comp=(Company)service.get(Company.class,tin);
       if (comp==null) {
@@ -103,7 +103,7 @@ public class CompanyResource {
 
    @DELETE
    @Path("{tin}")
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response deleteCompany(@PathParam("tin") String tin) {
       Company company = (Company) service.get(Company.class,tin);
       if (company == null) {

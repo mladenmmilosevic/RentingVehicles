@@ -38,7 +38,6 @@ public class CustomerService extends BaseService{
 
    }
 
-
    public void delRezbyCustomer(String uin, int id) {
       Customer customer = (Customer) get(Customer.class,uin);
       List<Reservation> reservations =customer.getReservations();

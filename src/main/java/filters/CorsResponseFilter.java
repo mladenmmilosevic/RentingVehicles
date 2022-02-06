@@ -16,7 +16,7 @@ public class CorsResponseFilter implements ContainerResponseFilter {
    public void filter(ContainerRequestContext requestContext,
             ContainerResponseContext responseContext) throws IOException {
       responseContext.getHeaders().add(
-               "Access-Control-Allow-Origin", "*"); // http://192.168.67.60:8080 'http://localhost:4200
+               "Access-Control-Allow-Origin", "*");
       responseContext.getHeaders().add(
                "Access-Control-Allow-Credentials", "true");
       responseContext.getHeaders().add(

@@ -1,4 +1,3 @@
-
 package filters;
 
 import java.lang.reflect.Method;
@@ -34,7 +33,6 @@ import security.TokenSecurity;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter{
 
-
    @Context
    private ResourceInfo resourceInfo;
 
@@ -59,9 +57,9 @@ public class AuthenticationFilter implements ContainerRequestFilter{
             throw new ForbiddenException("FORBIDDEN - "+ACCESS_FORBIDDEN);
          }
          final MultivaluedMap<String, String> headers = requestContext.getHeaders();
-         final List<String> authProperty = headers.get(AUTHORIZATION_PROPERTY); // = x-access-token
+         final List<String> authProperty = headers.get(AUTHORIZATION_PROPERTY);
 
-         if ((authProperty == null) || authProperty.isEmpty()) { // korisnik nije prosledio x-access-token header
+         if ((authProperty == null) || authProperty.isEmpty()) {
             throw new NotAuthorizedException("UNAUTHORIZED - " + NO_TOKEN_PROVIDED );
          }
          String id = null;
@@ -74,7 +72,7 @@ public class AuthenticationFilter implements ContainerRequestFilter{
          }
 
          User userSecurity = SecurityUtils.getUserSecurity(httpRequest.getSession(), id);
-         if (userSecurity == null) { // u sesiji nema UserSecurity:
+         if (userSecurity == null) {
             throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_DENIED );
          }
 
@@ -83,7 +81,7 @@ public class AuthenticationFilter implements ContainerRequestFilter{
          }
 
          if (method.isAnnotationPresent(RolesAllowed.class)) {
-            // get annotated roles
+
             RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
             Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 

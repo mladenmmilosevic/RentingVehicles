@@ -31,21 +31,21 @@ public class CarResource {
    CarService service;
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getMostRentedCars")
    public Response getMostRentedCars() {
       return Response.ok(service.getMostRentedCars()).build(); //
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getAllCars")
    public Response getAllCars() {
       return Response.ok(service.getAllCars()).build(); //
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getCarByEN/{en}")
    public Response getCarByEN(@PathParam("en") String en) {
 
@@ -59,7 +59,7 @@ public class CarResource {
    }
 
    @POST
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response createCar(Car car) {
 
       Car pom= (Car)service.get(Car.class,car.getEngineNumber());
@@ -76,7 +76,7 @@ public class CarResource {
 
    @PUT
    @Path("{en}")
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response updateCar(@PathParam("en") String en, Car car) {
       Car c=(Car)service.get(Car.class,en);
       if (c==null) {
@@ -95,7 +95,7 @@ public class CarResource {
 
    @DELETE
    @Path("{en}")
-   @RolesAllowed({"admin"})
+   @RolesAllowed({"ADMIN"})
    public Response deleteCar(@PathParam("en") String en) {
 
       Car car = (Car) service.get(Car.class,en);

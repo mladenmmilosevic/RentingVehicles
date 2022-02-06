@@ -10,6 +10,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
@@ -24,30 +26,30 @@ public abstract class DataCustomer {
    protected String dateStr;
 
    @Column(name = "birthday")
-   //@NotNull(message = "Due must be set")
+   @NotNull(message = "Due must be set")
    @PastOrPresent(message = "birthday must be in the past or present")
    protected Date birthday;
 
    @Column(name = "email")
-   //@NotBlank(message = "Email must be set")
+   @NotBlank(message = "Email must be set")
    @Size(min =	3, max = 30)
    protected String email;
 
    @Column(name="first_name")
-   //@NotBlank(message = "FirstName must be set")
+   @NotBlank(message = "FirstName must be set")
    protected String firstName;
 
    @Column(name = "gender")
-   //@NotNull(message = "Gender must be set")
+   @NotNull(message = "Gender must be set")
    @Enumerated(EnumType.STRING)
    protected Gender gender;
 
    @Column(name="last_name")
-   //@NotBlank(message = "LastName must be set")
+   @NotBlank(message = "LastName must be set")
    protected String lastName;
 
    @Column(name="password")
-   //@NotBlank(message = "Password must be set")
+   @NotBlank(message = "Password must be set")
    protected String password;
 
    @Column(name = "role")
@@ -55,9 +57,8 @@ public abstract class DataCustomer {
    protected Role role;
 
    @Column(name="username")
-   //@NotBlank(message = "Username must be set")
+   @NotBlank(message = "Username must be set")
    protected String username;
-
 
 
    public DataCustomer() {
@@ -94,7 +95,7 @@ public abstract class DataCustomer {
       this.gender = gender;
       this.lastName = lastName;
       this.password = password;
-      this.role = Role.customer;
+      this.role = Role.CUSTOMER;
       this.username = username;
    }
 
@@ -116,7 +117,6 @@ public abstract class DataCustomer {
       this.dateStr = dateStr;
       setBirthday(new SimpleDateFormat("dd.MM.yyyy").parse(dateStr));
    }
-
 
 
    public Date getBirthday() {

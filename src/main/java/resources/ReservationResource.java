@@ -32,13 +32,13 @@ public class ReservationResource {
 
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response getReservations() {
       return Response.ok(service.getAllReservations()).build();
    }
 
    @GET
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    @Path("getReservationByID/{id}")
    public Response getReservationByID(@PathParam("id") int id) {
       Reservation reservation = (Reservation) service.get(Reservation.class,id);
@@ -50,7 +50,7 @@ public class ReservationResource {
    }
 
    @POST
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response createReservation(Reservation reservation) throws ParseException {
       Reservation pom=(Reservation)service.get(Reservation.class,reservation.getReservationId());
       if (pom!= null) {
@@ -75,7 +75,7 @@ public class ReservationResource {
 
    @PUT
    @Path("{id}")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response updateReservation(@PathParam("id") int id, Reservation reservation) throws ParseException {
       Reservation res=(Reservation)service.get(Reservation.class,id);
       if (res==null) {
@@ -106,7 +106,7 @@ public class ReservationResource {
 
    @DELETE
    @Path("{id}")
-   @RolesAllowed({"customer","vip","admin"})
+   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
    public Response deleteReservation(@PathParam("id") int id) {
       Reservation reservation = (Reservation) service.get(Reservation.class,id);
       if(reservation == null) {
