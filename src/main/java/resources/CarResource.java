@@ -23,51 +23,62 @@ import entities.Reservation;
 import services.CarService;
 
 @Path("car")
-@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
-@Produces({MediaType.APPLICATION_JSON,MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
+@Consumes({
+   MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN
+})
+@Produces({
+   MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN
+})
 public class CarResource {
 
    @Inject
    CarService service;
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getMostRentedCars")
    public Response getMostRentedCars() {
-      return Response.ok(service.getMostRentedCars()).build(); //
+      return Response.ok(service.getMostRentedCars()).build();
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getAllCars")
    public Response getAllCars() {
-      return Response.ok(service.getAllCars()).build(); //
+      return Response.ok(service.getAllCars()).build();
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getCarByEN/{en}")
    public Response getCarByEN(@PathParam("en") String en) {
 
-      Car car = (Car) service.get(Car.class,en);
+      Car car = (Car) service.get(Car.class, en);
       if (car != null) {
          return Response.ok(car).build();
-      } else
-      {
-         throw new NotFoundException("Car with id "+en+" not found" );
+      } else {
+         throw new NotFoundException("Car with id " + en + " not found");
       }
    }
 
    @POST
-   @RolesAllowed({"ADMIN"})
+   @RolesAllowed({
+      "ADMIN"
+   })
    public Response createCar(Car car) {
 
-      Car pom= (Car)service.get(Car.class,car.getEngineNumber());
-      if ( pom!= null) {
+      Car pom = (Car) service.get(Car.class, car.getEngineNumber());
+      if (pom != null) {
          throw new BadRequestException("Car with an egine number already exists");
       }
 
-      Company company =(Company)service.get(Company.class, car.getTin());
+      Company company = (Company) service.get(Company.class, car.getTin());
       car.setCompany(company);
       car.setReservations(new ArrayList<Reservation>());
       service.create(car);
@@ -76,17 +87,19 @@ public class CarResource {
 
    @PUT
    @Path("{en}")
-   @RolesAllowed({"ADMIN"})
+   @RolesAllowed({
+      "ADMIN"
+   })
    public Response updateCar(@PathParam("en") String en, Car car) {
-      Car c=(Car)service.get(Car.class,en);
-      if (c==null) {
-         throw new NotFoundException("Car with id "+en+" not found" );
+      Car c = (Car) service.get(Car.class, en);
+      if (c == null) {
+         throw new NotFoundException("Car with id " + en + " not found");
       }
 
-      if(car.getEnginePower()!=null) {
+      if (car.getEnginePower() != null) {
          c.setEnginePower(car.getEnginePower());
       }
-      if(car.getCubicCapacity()!=null) {
+      if (car.getCubicCapacity() != null) {
          c.setCubicCapacity(car.getCubicCapacity());
       }
       service.update(c);
@@ -95,16 +108,17 @@ public class CarResource {
 
    @DELETE
    @Path("{en}")
-   @RolesAllowed({"ADMIN"})
+   @RolesAllowed({
+      "ADMIN"
+   })
    public Response deleteCar(@PathParam("en") String en) {
 
-      Car car = (Car) service.get(Car.class,en);
+      Car car = (Car) service.get(Car.class, en);
       if (car == null) {
-         throw new NotFoundException("Car with id "+en+" not found" );
+         throw new NotFoundException("Car with id " + en + " not found");
       }
       service.delete(car);
       return Response.status(Response.Status.NO_CONTENT).build();
    }
-
 
 }

@@ -7,12 +7,10 @@ import javax.ejb.Stateless;
 import entities.Car;
 
 @Stateless
-public class CarService  extends BaseService{
+public class CarService extends BaseService {
 
    public List<Car> getMostRentedCars() {
-      return entityManager.createNamedQuery("Car.MostRentedCars", Car.class)
-               .getResultList();
-
+      return entityManager.createNamedQuery("Car.MostRentedCars", Car.class).getResultList();
    }
 
    public List<Car> getAllCars() {

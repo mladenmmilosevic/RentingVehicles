@@ -4,7 +4,6 @@ import enums.Role;
 
 public class User {
 
-
    private String id = null;
    private String email = null;
    private String firstname = null;
@@ -12,7 +11,6 @@ public class User {
    private String password = null;
    private String token = null;
    private Role role = null;
-
 
    public User() {
    }

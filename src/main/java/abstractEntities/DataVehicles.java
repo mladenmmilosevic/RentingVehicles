@@ -38,8 +38,8 @@ public abstract class DataVehicles {
       this.model = model;
    }
 
-   public DataVehicles( String make,String model, String modelYear,
-            Integer cubicCapacity,Integer enginePower) {
+   public DataVehicles(String make, String model, String modelYear,
+            Integer cubicCapacity, Integer enginePower) {
       super();
       this.make = make;
       this.model = model;

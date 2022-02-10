@@ -19,7 +19,9 @@ import enums.Gender;
 import enums.Role;
 
 @MappedSuperclass
-@JsonbPropertyOrder(value = {"firstName", "lastName","email", "birthday", "gender", "username", "password", "role"})
+@JsonbPropertyOrder(value = {
+         "firstName", "lastName", "email", "birthday", "gender", "username", "password", "role"
+})
 public abstract class DataCustomer {
 
    @Transient
@@ -32,10 +34,10 @@ public abstract class DataCustomer {
 
    @Column(name = "email")
    @NotBlank(message = "Email must be set")
-   @Size(min =	3, max = 30)
+   @Size(min = 3, max = 30)
    protected String email;
 
-   @Column(name="first_name")
+   @Column(name = "first_name")
    @NotBlank(message = "FirstName must be set")
    protected String firstName;
 
@@ -44,11 +46,11 @@ public abstract class DataCustomer {
    @Enumerated(EnumType.STRING)
    protected Gender gender;
 
-   @Column(name="last_name")
+   @Column(name = "last_name")
    @NotBlank(message = "LastName must be set")
    protected String lastName;
 
-   @Column(name="password")
+   @Column(name = "password")
    @NotBlank(message = "Password must be set")
    protected String password;
 
@@ -56,10 +58,9 @@ public abstract class DataCustomer {
    @Enumerated(EnumType.STRING)
    protected Role role;
 
-   @Column(name="username")
+   @Column(name = "username")
    @NotBlank(message = "Username must be set")
    protected String username;
-
 
    public DataCustomer() {
       super();
@@ -99,8 +100,7 @@ public abstract class DataCustomer {
       this.username = username;
    }
 
-
-   public DataCustomer(Date birthday,String email, String firstName, Gender gender, String lastName) {
+   public DataCustomer(Date birthday, String email, String firstName, Gender gender, String lastName) {
       super();
       this.birthday = birthday;
       this.email = email;
@@ -117,7 +117,6 @@ public abstract class DataCustomer {
       this.dateStr = dateStr;
       setBirthday(new SimpleDateFormat("dd.MM.yyyy").parse(dateStr));
    }
-
 
    public Date getBirthday() {
       return birthday;
@@ -154,7 +153,6 @@ public abstract class DataCustomer {
    public String getLastName() {
       return lastName;
    }
-
 
    public void setLastName(String lastName) {
       this.lastName = lastName;

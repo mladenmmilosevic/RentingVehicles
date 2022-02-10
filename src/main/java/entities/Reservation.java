@@ -16,21 +16,17 @@ import javax.validation.constraints.NotNull;
 
 import abstractEntities.DataReservation;
 
-
-
-/**
- * The persistent class for the reservations database table.
- *
- */
 @Entity
-@Table(name="reservations")
-@NamedQuery(name="Reservation.findAll", query="SELECT new entities.Reservation(r.dateStart,r.dateEnd,r.priceDay,r.reservationId, r.car,r.customer) FROM Reservation r")
-@JsonbPropertyOrder(value = { "reservation_id", "dateStart", "dateEnd", "priceDay","car", "customer"})
+@Table(name = "reservations")
+@NamedQuery(name = "Reservation.findAll", query = "SELECT new entities.Reservation(r.dateStart,r.dateEnd,r.priceDay,r.reservationId, r.car,r.customer) FROM Reservation r")
+@JsonbPropertyOrder(value = {
+         "reservation_id", "dateStart", "dateEnd", "priceDay", "car", "customer"
+})
 public class Reservation extends DataReservation implements Serializable {
    private static final long serialVersionUID = 1L;
 
    @Id
-   @Column(name="reservation_id")
+   @Column(name = "reservation_id")
    @NotNull(message = "ReservationID must be set")
    private Integer reservationId;
 
@@ -40,21 +36,18 @@ public class Reservation extends DataReservation implements Serializable {
    @Transient
    private String carId;
 
-   //bi-directional many-to-one association to Car
    @ManyToOne
-   @JoinColumn(name="car_id")
+   @JoinColumn(name = "car_id")
    private Car car;
 
-
-   //bi-directional many-to-one association to Customer
    @ManyToOne
-   @JoinColumn(name="user_id")
+   @JoinColumn(name = "user_id")
    private Customer customer;
 
    public Reservation() {
    }
 
-   public Reservation(Date dateEnd, Date dateStart, Integer priceDay,Integer reservationId, Car car, Customer customer) {
+   public Reservation(Date dateEnd, Date dateStart, Integer priceDay, Integer reservationId, Car car, Customer customer) {
       super(dateEnd, dateStart, priceDay);
       this.reservationId = reservationId;
       this.car = car;
@@ -68,7 +61,6 @@ public class Reservation extends DataReservation implements Serializable {
       this.car = car;
       this.customer = customer;
    }
-
 
    public String getUserId() {
       return userId;
@@ -110,7 +102,7 @@ public class Reservation extends DataReservation implements Serializable {
 
    public Customer getCustomer() {
 
-      Customer customer=new Customer();
+      Customer customer = new Customer();
       customer.setFirstName(this.customer.getFirstName());
       customer.setLastName(this.customer.getLastName());
       customer.setEmail(this.customer.getEmail());
@@ -124,9 +116,7 @@ public class Reservation extends DataReservation implements Serializable {
 
    @Override
    public String toString() {
-      return "Reservation [reservationId=" + reservationId + super.toString()+", car=" + car + ", customer=" + customer + "]";
+      return "Reservation [reservationId=" + reservationId + super.toString() + ", car=" + car + ", customer=" + customer + "]";
    }
-
-
 
 }

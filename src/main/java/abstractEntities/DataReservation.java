@@ -11,7 +11,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
-public abstract class DataReservation  {
+public abstract class DataReservation {
 
    @Transient
    protected String dateStartStr;
@@ -34,7 +34,7 @@ public abstract class DataReservation  {
       super();
    }
 
-   public DataReservation( Date dateEnd, Date dateStart, Integer priceDay) {
+   public DataReservation(Date dateEnd, Date dateStart, Integer priceDay) {
       super();
       this.dateEnd = dateEnd;
       this.dateStart = dateStart;

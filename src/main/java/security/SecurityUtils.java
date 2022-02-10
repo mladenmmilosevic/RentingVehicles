@@ -21,7 +21,7 @@ public class SecurityUtils {
    }
 
    public static void setUserSecurity(HttpSession session, User user_sec) {
-      session.getServletContext().setAttribute("user_sec_" + user_sec.getId() , user_sec);
+      session.getServletContext().setAttribute("user_sec_" + user_sec.getId(), user_sec);
    }
 
    public static void removeUserSecurity(HttpSession session, String id) {

@@ -27,4 +27,3 @@ public class CorsResponseFilter implements ContainerResponseFilter {
                "GET, POST, PUT, DELETE, OPTIONS, HEAD");
    }
 }
-

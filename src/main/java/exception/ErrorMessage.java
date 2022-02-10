@@ -3,7 +3,7 @@ package exception;
 public class ErrorMessage {
 
    private String errorMessage;
-   private int  errorCode;
+   private int errorCode;
 
    public ErrorMessage() {
 
@@ -23,10 +23,9 @@ public class ErrorMessage {
       this.errorMessage = errorMessage;
    }
 
-   public int  getErrorCode() {
+   public int getErrorCode() {
       return errorCode;
    }
-
 
    public void setErrorCode(int errorCode) {
       this.errorCode = errorCode;

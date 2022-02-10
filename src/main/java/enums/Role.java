@@ -1,5 +1,5 @@
 package enums;
 
 public enum Role {
-   VIP,ADMIN,CUSTOMER;
+   VIP, ADMIN, CUSTOMER;
 }

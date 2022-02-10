@@ -20,119 +20,101 @@ import abstractEntities.DataCustomer;
 import enums.Gender;
 import enums.Role;
 
+@Entity
+@Table(name = "customers")
+@NamedQuery(name = "Customer.findAll", query = "SELECT new entities.Customer(c.birthday,c.email,c.firstName,c.gender,c.lastName) FROM Customer c")
+@NamedQuery(name = "Customer.findCustomerByName", query = "SELECT new entities.Customer(c.birthday,c.email,c.firstName,c.gender,c.lastName) "
+         + "FROM Customer c WHERE c.firstName LIKE :full ")
+@NamedQuery(name = "Customer.findCustomerByUserName", query = "SELECT new entities.Customer(c.password,c.role,c.uin)"
+         + " FROM Customer c WHERE c.username like :full ")
+@NamedQuery(name = "Customer.VipCustomers", query = "SELECT new entities.Customer(c.firstName,c.lastName,c.uin, SUM((r.dateEnd-r.dateStart)*r.priceDay)) "
+         + "FROM  Reservation r join r.customer c "
+         + "GROUP by c.uin, c.firstName,c.lastName "
+         + "HAVING SUM((r.dateEnd-r.dateStart)*r.priceDay) > 0 "
+         + "ORDER BY SUM(((r.dateEnd-r.dateStart)*r.priceDay)) desc")
 
-/**
- * The persistent class for the customers database table.
- *
- */@Entity
- @Table(name = "customers")
- @NamedQuery(name = "Customer.findAll", query = "SELECT new entities.Customer(c.birthday,c.email,c.firstName,c.gender,c.lastName) FROM Customer c")
- @NamedQuery(name="Customer.findCustomerByName", query="SELECT new entities.Customer(c.birthday,c.email,c.firstName,c.gender,c.lastName) "
-          + "FROM Customer c WHERE c.firstName LIKE :full ")
- @NamedQuery(name="Customer.findCustomerByUserName", query="SELECT new entities.Customer(c.password,c.role,c.uin)"
-          + " FROM Customer c WHERE c.username like :full ")
- @NamedQuery(name="Customer.VipCustomers", query="SELECT new entities.Customer(c.firstName,c.lastName,c.uin, SUM((r.dateEnd-r.dateStart)*r.priceDay)) "
-          + "FROM  Reservation r join r.customer c "
-          + "GROUP by c.uin, c.firstName,c.lastName "
-          + "HAVING SUM((r.dateEnd-r.dateStart)*r.priceDay) > 0 "
-          + "ORDER BY SUM(((r.dateEnd-r.dateStart)*r.priceDay)) desc")
+public class Customer extends DataCustomer implements Serializable {
+   private static final long serialVersionUID = 1L;
 
- /*@NamedNativeQuery(name = "Vip_Customers",
- query = "select c.uin as uin ,c.first_name  as firstName ,c.last_name  as lastName, sum((r.date_end - r.date_start)* r.price_day ) as money_spent "
- + "from customers as c join  reservations as r on c.uin = r.user_id  "
- + "GROUP by c.uin, c.first_name,c.last_name "
- + "having sum((r.date_end - r.date_start)* r.price_day )   > 0 "
- + "ORDER by money_spent desc", resultSetMapping = "getVip_Customers")
-@SqlResultSetMapping(name = "getVip_Customers", classes = {
- @ConstructorResult(columns = {
-       @ColumnResult(name = "firstName"),
-       @ColumnResult(name = "lastName"),
-       @ColumnResult(name = "uin"),
-       @ColumnResult(name = "money_spent", type = Integer.class) }, targetClass = Customer.class) })*/
+   @Id
+   @Column(name = "uin")
+   @Size(min = 10, max = 10, message = "uin  must have 10 characters")
+   @NotBlank(message = "Uin must be set")
+   private String uin;
 
- public class Customer extends DataCustomer implements Serializable {
-    private static final long serialVersionUID = 1L;
+   @OneToMany(mappedBy = "customer", cascade = {
+            CascadeType.ALL
+   })
+   @JsonbTransient
+   private List<Reservation> reservations;
 
-    @Id
-    @Column(name = "uin")
-    @Size(min = 10,max = 10, message = "uin  must have 10 characters")
-    @NotBlank(message = "Uin must be set")
-    private String uin;
+   @Transient
+   private Long money_spent;
 
-    //bi-directional many-to-one association to Reservation
-    @OneToMany(mappedBy="customer",cascade = { CascadeType.ALL })
-    @JsonbTransient
-    private List<Reservation> reservations;
+   public Customer() {
+   }
 
-    @Transient
-    private Long money_spent;
+   public Customer(String firstName, String lastName, String uin, Long money_spent) {
+      super(firstName, lastName);
+      this.uin = uin;
+      this.money_spent = money_spent;
+   }
 
-    public Customer() {
-    }
+   public Customer(String birthday, String email, String firstName, Gender gender, String lastName, String uin) {
+      super(birthday, email, firstName, gender, lastName);
+      this.uin = uin;
+   }
 
+   public Customer(String password, Role role, String uin) {
+      super(password, role);
+      this.uin = uin;
+   }
 
-    public Customer(String firstName, String lastName, String uin, Long money_spent) {
-       super(firstName, lastName);
-       this.uin = uin;
-       this.money_spent = money_spent;
-    }
+   public Customer(Date birthday, String email, String firstName, Gender gender, String lastName) {
+      super(birthday, email, firstName, gender, lastName);
+   }
 
-    public Customer(String birthday, String email, String firstName, Gender gender, String lastName,String uin) {
-       super(birthday, email, firstName, gender, lastName);
-       this.uin = uin;
-    }
+   public Long getMoney_spent() {
+      return money_spent;
+   }
 
-    public Customer(String password, Role role, String uin) {
-       super(password, role);
-       this.uin = uin;
-    }
+   public void setMoney_spent(Long money_spent) {
+      this.money_spent = money_spent;
+   }
 
-    public Customer(Date birthday, String email, String firstName, Gender gender, String lastName) {
-       super(birthday, email, firstName, gender, lastName);
-    }
+   public String getUin() {
+      return this.uin;
+   }
 
+   public void setUin(String uin) {
+      this.uin = uin;
+   }
 
-    public Long getMoney_spent() {
-       return money_spent;
-    }
+   public List<Reservation> getReservations() {
+      return this.reservations;
+   }
 
-    public void setMoney_spent(Long money_spent) {
-       this.money_spent = money_spent;
-    }
+   public void setReservations(List<Reservation> reservations) {
+      this.reservations = reservations;
+   }
 
-    public String getUin() {
-       return this.uin;
-    }
+   public Reservation addReservation(Reservation reservation) {
+      getReservations().add(reservation);
+      reservation.setCustomer(this);
 
-    public void setUin(String uin) {
-       this.uin = uin;
-    }
+      return reservation;
+   }
 
-    public List<Reservation> getReservations() {
-       return this.reservations;
-    }
+   public Reservation removeReservation(Reservation reservation) {
+      getReservations().remove(reservation);
+      reservation.setCustomer(null);
 
-    public void setReservations(List<Reservation> reservations) {
-       this.reservations = reservations;
-    }
+      return reservation;
+   }
 
-    public Reservation addReservation(Reservation reservation) {
-       getReservations().add(reservation);
-       reservation.setCustomer(this);
+   @Override
+   public String toString() {
+      return "Customer [uin=" + uin + ", reservations=" + reservations + ", money_spent=" + money_spent + super.toString() + "]";
+   }
 
-       return reservation;
-    }
-
-    public Reservation removeReservation(Reservation reservation) {
-       getReservations().remove(reservation);
-       reservation.setCustomer(null);
-
-       return reservation;
-    }
-
-    @Override
-    public String toString() {
-       return "Customer [uin=" + uin + ", reservations=" + reservations + ", money_spent=" + money_spent + super.toString() +"]";
-    }
-
- }
+}

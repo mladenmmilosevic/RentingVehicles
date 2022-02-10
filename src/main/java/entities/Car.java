@@ -21,46 +21,37 @@ import javax.validation.constraints.Size;
 import abstractEntities.DataVehicles;
 
 
-/**
- * The persistent class for the cars database table.
- *
- */
 @Entity
-@Table(name="cars")
+@Table(name = "cars")
 @NamedQuery(name = "Car.findAll", query = "SELECT new entities.Car(c.company,c.make ,c.model,c.modelYear,c.cubicCapacity,c.enginePower,c.engineNumber) FROM Car c ")
 @NamedQuery(name = "Car.findByID", query = "SELECT new entities.Car(c.company,c.make ,c.model,c.modelYear,"
          + "c.cubicCapacity,c.enginePower,c.engineNumber) FROM Car c where c.engineNumber=:en")
-@JsonbPropertyOrder(value = { "engineNumber", "make", "model",
-         "modelYear", "cubicCapacity", "enginePower","broj" })
-/*@NamedNativeQuery(name = "MostRentedCars", query = "select c.engine_number ,c.make,c.model, count(*) as broj "
-         + "from Car c join Reservation r ON r.car_id = c.engine_number " + "group by c.engine_number "
-         + "having count(*) > 0 " + "ORDER by broj desc ", resultSetMapping = "getMostRentedCars")
-@SqlResultSetMapping(name = "getMostRentedCars", classes = { @ConstructorResult(columns = {
-         @ColumnResult(name = "engine_number"), @ColumnResult(name = "make"), @ColumnResult(name = "model"),
-         @ColumnResult(name = "broj", type = Long.class) }, targetClass = Car.class) })
- */
+@JsonbPropertyOrder(value = {
+         "engineNumber", "make", "model",
+         "modelYear", "cubicCapacity", "enginePower", "broj"
+})
 @NamedQuery(name = "Car.MostRentedCars", query = "SELECT new entities.Car(c.company,c.engineNumber,c.make ,c.model,count(c.engineNumber) ) "
          + "from  Reservation r join r.car c " + "group by c.company, c.engineNumber,c.make ,c.model "
-         + "having count(c.engineNumber) > 0 ORDER by count(c.engineNumber) desc" )
+         + "having count(c.engineNumber) > 0 ORDER by count(c.engineNumber) desc")
 public class Car extends DataVehicles implements Serializable {
    private static final long serialVersionUID = 1L;
 
    @Id
-   @Column(name="engine_number")
+   @Column(name = "engine_number")
    @NotBlank(message = "EngineNumber must be set")
-   @Size(min = 10,max = 10, message = "engineNumber  must have 10 characters")
-   //bin validation greska razlicit broj cifara
+   @Size(min = 10, max = 10, message = "engineNumber  must have 10 characters")
+
    private String engineNumber;
 
-   //bi-directional many-to-one association to Company
    @ManyToOne
-   @JoinColumn(name="company_id")
+   @JoinColumn(name = "company_id")
    private Company company;
 
-   //bi-directional many-to-one association to Reservation
-   @OneToMany(mappedBy="car", cascade = { CascadeType.ALL } )
-   @JsonbTransient//skloni
-   private List<Reservation>  reservations;
+   @OneToMany(mappedBy = "car", cascade = {
+            CascadeType.ALL
+   })
+   @JsonbTransient
+   private List<Reservation> reservations;
 
    @Transient
    private Long broj;
@@ -72,21 +63,18 @@ public class Car extends DataVehicles implements Serializable {
    }
 
    public Car(Company company, String engineNumber, String carMake, String carModel, Long broj) {
-      super(carMake,carModel);
-      this.company=company;
+      super(carMake, carModel);
+      this.company = company;
       this.engineNumber = engineNumber;
       this.broj = broj;
    }
 
-
-   public Car(Company company,String make, String model, String modelYear, Integer cubicCapacity,
+   public Car(Company company, String make, String model, String modelYear, Integer cubicCapacity,
             Integer enginePower, String engineNumber) {
       super(make, model, modelYear, cubicCapacity, enginePower);
-      this.company=company;
+      this.company = company;
       this.engineNumber = engineNumber;
    }
-
-
 
    public String getTin() {
       return tin;
@@ -149,9 +137,7 @@ public class Car extends DataVehicles implements Serializable {
 
    @Override
    public String toString() {
-      return "Car [engineNumber=" + engineNumber + ", company=" + company +" " + super.toString() + "]";
+      return "Car [engineNumber=" + engineNumber + ", company=" + company + " " + super.toString() + "]";
    }
-
-
 
 }

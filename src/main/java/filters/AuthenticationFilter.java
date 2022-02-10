@@ -31,7 +31,7 @@ import security.TokenSecurity;
 @WebFilter(urlPatterns = "/*")
 @Provider
 @Priority(Priorities.AUTHENTICATION)
-public class AuthenticationFilter implements ContainerRequestFilter{
+public class AuthenticationFilter implements ContainerRequestFilter {
 
    @Context
    private ResourceInfo resourceInfo;
@@ -54,13 +54,13 @@ public class AuthenticationFilter implements ContainerRequestFilter{
 
       if (!method.isAnnotationPresent(PermitAll.class)) {
          if (method.isAnnotationPresent(DenyAll.class)) {
-            throw new ForbiddenException("FORBIDDEN - "+ACCESS_FORBIDDEN);
+            throw new ForbiddenException("FORBIDDEN - " + ACCESS_FORBIDDEN);
          }
          final MultivaluedMap<String, String> headers = requestContext.getHeaders();
          final List<String> authProperty = headers.get(AUTHORIZATION_PROPERTY);
 
          if ((authProperty == null) || authProperty.isEmpty()) {
-            throw new NotAuthorizedException("UNAUTHORIZED - " + NO_TOKEN_PROVIDED );
+            throw new NotAuthorizedException("UNAUTHORIZED - " + NO_TOKEN_PROVIDED);
          }
          String id = null;
          String jwt = authProperty.get(0);
@@ -68,16 +68,16 @@ public class AuthenticationFilter implements ContainerRequestFilter{
          try {
             id = TokenSecurity.validateJwtToken(jwt);
          } catch (InvalidJwtException e) {
-            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_INVALID_TOKEN );
+            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_INVALID_TOKEN);
          }
 
          User userSecurity = SecurityUtils.getUserSecurity(httpRequest.getSession(), id);
          if (userSecurity == null) {
-            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_DENIED );
+            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_DENIED);
          }
 
          if (!userSecurity.getToken().equals(jwt)) {
-            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_REFRESH );
+            throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_REFRESH);
          }
 
          if (method.isAnnotationPresent(RolesAllowed.class)) {
@@ -86,11 +86,12 @@ public class AuthenticationFilter implements ContainerRequestFilter{
             Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 
             if (!isUserAllowed(userSecurity.getRole().toString(), rolesSet)) {
-               throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_DENIED );
+               throw new NotAuthorizedException("UNAUTHORIZED - " + ACCESS_DENIED);
             }
          }
       }
    }
+
    private boolean isUserAllowed(final String userRole, final Set<String> rolesSet) {
       boolean isAllowed = false;
       if (rolesSet.contains(userRole)) {

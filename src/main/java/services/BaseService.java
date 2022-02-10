@@ -1,4 +1,5 @@
 package services;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,8 +11,8 @@ public class BaseService {
    @PersistenceContext(unitName = "renting")
    protected EntityManager entityManager;
 
-   public Serializable get( Class<?> c,Object  id) {
-      return   (Serializable) entityManager.find(c, id);
+   public Serializable get(Class<?> c, Object id) {
+      return (Serializable) entityManager.find(c, id);
    }
 
    public Serializable create(Serializable t) {

@@ -11,8 +11,7 @@ import entities.Company;
 public class CompanyService extends BaseService {
 
    public List<Company> getAllCompanies() {
-      List<Company> companies = entityManager.createNamedQuery("Company.findAll", Company.class).getResultList();
-      return companies;
+      return entityManager.createNamedQuery("Company.findAll", Company.class).getResultList();
    }
 
    public List<Car> getAllCarsByCompany(Company company) {

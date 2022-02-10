@@ -37,10 +37,13 @@ import security.SecurityUtils;
 import security.TokenSecurity;
 import services.CustomerService;
 
-
 @Path("customer")
-@Consumes({MediaType.APPLICATION_JSON,MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
-@Produces({MediaType.APPLICATION_JSON,MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
+@Consumes({
+   MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN
+})
+@Produces({
+   MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN
+})
 public class CustomerResource {
 
    @Inject
@@ -53,7 +56,7 @@ public class CustomerResource {
    private ResourceContext context;
 
    @Inject
-   Pbkdf2PasswordHash pwdHash ;
+   Pbkdf2PasswordHash pwdHash;
 
    @PostConstruct
    public void init() {
@@ -65,50 +68,60 @@ public class CustomerResource {
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getAllCustomers")
    public Response getAllCustomer() {
       return Response.ok(service.getAllCustomers()).build(); //
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getVipCustomers")
    public Response getVipCustomer() {
       return Response.ok(service.getVipCustomers()).build();
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("name/{name}")
    public Response getCustomerByName(@PathParam("name") String name) {
       return Response.ok(service.getCustomersByName(name)).build(); //
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("getCustomerByUIN/{uin}")
    public Response getCustomerByUIN(@PathParam("uin") String uin) {
-      Customer customer = (Customer)service.get(Customer.class,uin);
+      Customer customer = (Customer) service.get(Customer.class, uin);
       if (customer != null) {
          return Response.ok(customer).build(); //
       } else {
-         throw new NotFoundException("Customer with id "+uin+" not found" );
+         throw new NotFoundException("Customer with id " + uin + " not found");
       }
    }
 
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("cust/{uin}/ren/{id}")
    public Response delRezbyCustomer(@PathParam("uin") String uin, @PathParam("id") int id) {
       service.delRezbyCustomer(uin, id);
-      return Response.ok(service.get(Customer.class,uin)).build(); //
+      return Response.ok(service.get(Customer.class, uin)).build(); //
    }
 
    @POST
    @PermitAll
    public Response createCustomer(Customer customer) {
-      Customer cust=(Customer)service.get(Customer.class,customer.getUin());
+      Customer cust = (Customer) service.get(Customer.class, customer.getUin());
       if (cust != null) {
          throw new BadRequestException("Customer with an uin already exists");
       }
@@ -119,29 +132,31 @@ public class CustomerResource {
    }
 
    @PUT
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("{uin}")
    public Response updateCustomer(@PathParam("uin") String uin, Customer customer) {
-      Customer cust=(Customer)service.get(Customer.class,uin);
-      if (cust==null) {
-         throw new NotFoundException("Customer with id "+uin+" not found" );
+      Customer cust = (Customer) service.get(Customer.class, uin);
+      if (cust == null) {
+         throw new NotFoundException("Customer with id " + uin + " not found");
       }
-      if(customer.getPassword()!=null) {
+      if (customer.getPassword() != null) {
          cust.setPassword(passwordHash(customer.getPassword()));
       }
-      if(customer.getFirstName()!=null) {
+      if (customer.getFirstName() != null) {
          cust.setFirstName(customer.getFirstName());
       }
-      if(customer.getLastName()!=null) {
+      if (customer.getLastName() != null) {
          cust.setLastName(customer.getLastName());
       }
-      if(customer.getEmail()!=null) {
+      if (customer.getEmail() != null) {
          cust.setEmail(customer.getEmail());
       }
-      if(customer.getUsername()!=null) {
+      if (customer.getUsername() != null) {
          cust.setUsername(customer.getUsername());
       }
-      if(customer.getRole()!=null) {
+      if (customer.getRole() != null) {
          cust.setRole(customer.getRole());
       }
 
@@ -150,12 +165,14 @@ public class CustomerResource {
    }
 
    @DELETE
-   @RolesAllowed({"ADMIN"})
+   @RolesAllowed({
+      "ADMIN"
+   })
    @Path("{uin}")
    public Response deleteCustomer(@PathParam("uin") String uin) {
-      Customer customer =(Customer) service.get(Customer.class,uin);
+      Customer customer = (Customer) service.get(Customer.class, uin);
       if (customer == null) {
-         throw new NotFoundException("Customer with id "+uin+" not found" );
+         throw new NotFoundException("Customer with id " + uin + " not found");
       }
       service.delete(customer);
       return Response.status(Response.Status.NO_CONTENT).build();
@@ -167,27 +184,25 @@ public class CustomerResource {
    public Response loginCustomer(Credentials credentials) {
       Customer customer = service.getCustomersByNameEquals(credentials.getUsername());
       String token;
-      if(customer == null)
-      {
-         throw new NotFoundException("Customer with username "+credentials.getUsername()+" not found" );
+      if (customer == null) {
+         throw new NotFoundException("Customer with username " + credentials.getUsername() + " not found");
       }
-      boolean ver = pwdHash.verify(credentials.getPassword().toCharArray(),customer.getPassword());
-      if(!ver) // !customer.getPassword().equals(pass)
+      boolean ver = pwdHash.verify(credentials.getPassword().toCharArray(), customer.getPassword());
+      if (!ver) // !customer.getPassword().equals(pass)
       {
          throw new BadRequestException("Wrong pass");
       }
       try {
-         token=TokenSecurity.generateJwtToken(customer.getUin());
-      }
-      catch(Exception ex) {
+         token = TokenSecurity.generateJwtToken(customer.getUin());
+      } catch (Exception ex) {
          throw new BadRequestException("error during JWT generation");
       }
 
-      User user = new User(customer.getUin(),customer.getEmail() , customer.getFirstName(), customer.getLastName(), customer.getPassword(), token, customer.getRole());
+      User user = new User(customer.getUin(), customer.getEmail(), customer.getFirstName(), customer.getLastName(),
+               customer.getPassword(), token, customer.getRole());
       try {
          SecurityUtils.setUserSecurity(request.getSession(), user);
-      }
-      catch(Exception ex) {
+      } catch (Exception ex) {
          throw new BadRequestException("Set user security");
       }
       Map<String, Object> map = new HashMap<String, Object>();
@@ -196,19 +211,20 @@ public class CustomerResource {
    }
 
    @Path("{uin}/changepass")
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @POST
-   public Response changePassCustomer(@PathParam("uin") String uin,ChangePassword cp) {
-      Customer customer =(Customer) service.get(Customer.class,uin);
-      if(customer == null)
-      {
-         throw new NotFoundException("Customer with id "+uin+" not found" );
+   public Response changePassCustomer(@PathParam("uin") String uin, ChangePassword cp) {
+      Customer customer = (Customer) service.get(Customer.class, uin);
+      if (customer == null) {
+         throw new NotFoundException("Customer with id " + uin + " not found");
       }
       cp.setNewpassword(passwordHash(cp.getNewpassword()));
 
       boolean ver = pwdHash.verify(cp.getOldpassword().toCharArray(),
                customer.getPassword());
-      if(!ver)  //!customer.getPassword().equals(pass)
+      if (!ver) // !customer.getPassword().equals(pass)
       {
          throw new BadRequestException("Passwords are not the same");
       }
@@ -216,8 +232,11 @@ public class CustomerResource {
       service.update(customer);
       return Response.ok().build();
    }
+
    @GET
-   @RolesAllowed({ "ADMIN","CUSTOMER","VIP" })
+   @RolesAllowed({
+      "ADMIN", "CUSTOMER", "VIP"
+   })
    @Path("/logout")
    public Response logout(@Context HttpHeaders headers) {
       SecurityUtils.removeUserSecurity(request.getSession(), getId(headers));
@@ -225,7 +244,6 @@ public class CustomerResource {
    }
 
    private String getId(HttpHeaders headers) {
-      // get the email we set in AuthenticationFilter
       List<String> id = headers.getRequestHeader("id");
       if ((id == null) || (id.size() != 1)) {
          throw new NotAuthorizedException("Unauthorized!");
@@ -233,9 +251,8 @@ public class CustomerResource {
       return id.get(0);
    }
 
-   public String  passwordHash(String password) {
-      String string= pwdHash.generate(password.toCharArray());
+   public String passwordHash(String password) {
+      String string = pwdHash.generate(password.toCharArray());
       return string;
    }
 }
-

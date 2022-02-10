@@ -43,7 +43,7 @@ public class ReservationResource {
    public Response getReservationByID(@PathParam("id") int id) {
       Reservation reservation = (Reservation) service.get(Reservation.class,id);
       if(reservation != null) {
-         return Response.ok(reservation).build(); //
+         return Response.ok(reservation).build();
       } else {
          throw new NotFoundException("Reservation with id "+id+" not found" );
       }
